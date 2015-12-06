@@ -20,6 +20,6 @@ I mapped that literacy rate, and drew on several books about the time period to 
   - Seine-Maritime was Seine-Inférieure
 
 To create the map, I used QGIS to combine several sources of GIS map data:
-- The background map of pre-World War I European boundaries was a map of Europe in 1900 from the [Max Planck Institute For Demographic Research Population History GIS Collection](http://censusmosaic.org/web/data/historical-gis-files)
+- The background map of pre-World War I European boundaries was a map of Europe in 1900 from the [Max Planck Institute For Demographic Research Population History GIS Collection](http://censusmosaic.org/web/data/historical-gis-files).
 - For French departments I used a map of modern-day departmental boundaries from the [GADM database](http://gadm.org), and edited the map to make the changes above.
   - This has led to one minor inaccuracy in the map: the boundaries of the Seine and Seine-et-Oise departments reflect the present-day boundaries of the departments they were split into. Therefore the small portion of Val-de-Marne that was part of Seine-et-Oise appears on this map as part of Seine.
