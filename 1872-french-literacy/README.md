@@ -6,7 +6,7 @@ I mapped that literacy rate, and drew on several books about the time period to 
 
 ![1872 French literacy](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/1872-french-literacy/literacyfrance.png)
 
-`illiteracy.csv` contains the raw data, taken from Martin's almanac. Department names in the spreadsheet are those existing in France in 1872, which are largely the same as the current departments, but with some exceptions:
+`illiteracy.csv` contains the raw data, taken from Martin's almanac. Department names in the spreadsheet are those existing in France in 1872, which are largely the same as the current departments, but with some exceptions ([source](https://en.wikipedia.org/wiki/Departments_of_France)):
 
 - Territory lost to the Germans in 1871, and then regained after World War I, is missing. That means the modern-day departments of Bas-Rhin, Alsace and Moselle do not exist.
 - Corsica was a single department, rather than being divided into Corse-du-Sud and Haute-Corse as it is today
