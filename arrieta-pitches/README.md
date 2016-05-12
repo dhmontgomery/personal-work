@@ -4,6 +4,8 @@ An R script that visualizes every pitch thrown by Jake Arrieta in the 2015 regul
 
 Based on <a href="http://www.hardballtimes.com/a-short-ish-introduction-to-using-r-for-baseball-research/">a tutorial</a> by Bill Petti at The Hardball Times.
 
+The script will take a few minutes to run, due to the large amount of data it needs to download.
+
 One of the outputs:
 
 ![Jake Arrieta called balls](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/arrieta-pitches/images/All%20Batters/Arrieta_ball.png)
