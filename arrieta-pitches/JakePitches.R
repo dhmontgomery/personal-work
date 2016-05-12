@@ -1,9 +1,8 @@
 ## This will download MLB data for 2015 and produce 12 graphs in your working directory of the pitch location and speed of Jake Arrieta's pitches by outcome.
 ## Created based on a tutorial by Bill Petti: http://www.hardballtimes.com/a-short-ish-introduction-to-using-r-for-baseball-research/
 
-require(pacman)
-library(pacman)
-p_load(Lahman, dplyr, pitchRx)
+require(pitchRx)
+require(dplyr)
 
 data(gids,package="pitchRx") ## Load the dataset of Gameday IDs
 cubsa <- gids[grep("2015_[0-9]{2}_[0-9]{2}_chnmlb*",gids)] ## Extract 2015 Cubs away game IDs
@@ -18,11 +17,12 @@ data <- names %>% filter(pitcher_name == "Jake Arrieta") %>% inner_join(location
 
 Arrieta <- data[,c(1:5,12:13)] ## Pare down our columns
 
+## Create data frames for our four pitch outcomes
 ArrietaSwing <- filter(Arrieta, grepl("Swinging", des))
 ArrietaTake <- filter(Arrieta, grepl("Called", des))
 ArrietaBall <- filter(Arrieta, grepl("Ball", des))
 ArrietaFoul <- filter(Arrieta, grepl("Foul", des))
-
+## Split by handedness
 ArrietaSwingL <- subset(ArrietaSwing, stand == "L")
 ArrietaSwingR <- subset(ArrietaSwing, stand == "R")
 ArrietaTakeL <- subset(ArrietaTake, stand == "L")
@@ -40,7 +40,7 @@ p <- p + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,
 p <- p + geom_point(size = 3, alpha = .65)
 p <- p + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_swing.png", width=600)
-p
+print(p)
 dev.off()
 
 ## Plot of all called strikes
@@ -49,7 +49,7 @@ c <- c + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,
 c <- c + geom_point(size = 3, alpha = .65)
 c <- c + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_take.png", width=600)
-c
+print(c)
 dev.off()
 
 ## Plot of all foul balls
@@ -58,17 +58,18 @@ f <- f + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,
 f <- f + geom_point(size = 3, alpha = .65)
 f <- f + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_foul.png", width=600)
-f
+print(f)
 dev.off()
 
 ## Plot of all called balls
 b <- ggplot(ArrietaBall, aes(px,pz,color=start_speed))
-b <- b + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,5)) + annotate("rect", xmin = -1, xmax = 1, ymin = 1.5, ymax = 3.5, color = "black", alpha = 0) + labs(title = "Jake Arrieta: Balls, 2015") + ylab("Vertical Location (ft.)") + xlab("Horizontal Location (ft): Catcher's View") + labs(color = "Velocity (mph)")
+b <- b + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,5)) + annotate("rect", xmin = -1, xmax = 1, ymin = 1.5, ymax = 3.5, color = "black", alpha = 0) + labs(title = "Jake Arrieta: Called Balls, 2015") + ylab("Vertical Location (ft.)") + xlab("Horizontal Location (ft): Catcher's View") + labs(color = "Velocity (mph)")
 b <- b + geom_point(size = 3, alpha = .65)
 b <- b + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_ball.png", width=600)
-b
+print(b)
 dev.off()
+
 
 ##Now left-handed batters only
 
@@ -78,7 +79,7 @@ p_l <- p_l + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = 
 p_l <- p_l + geom_point(size = 3, alpha = .65)
 p_l <- p_l + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_swingL.png", width=600)
-p_l
+print(p_l)
 dev.off()
 
 ## Plot of all called strikes
@@ -87,7 +88,7 @@ c_l <- c_l + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = 
 c_l <- c_l + geom_point(size = 3, alpha = .65)
 c_l <- c_l + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_takeL.png", width=600)
-c_l
+print(c_l)
 dev.off()
 
 ## Plot of all foul balls
@@ -96,16 +97,16 @@ f_l <- f_l + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = 
 f_l <- f_l + geom_point(size = 3, alpha = .65)
 f_l <- f_l + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_foulL.png", width=600)
-f_l
+print(f_l)
 dev.off()
 
 ## Plot of all called balls
 b_l <- ggplot(ArrietaBallL, aes(px,pz,color=start_speed))
-b_l <- b_l + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,5)) + annotate("rect", xmin = -1, xmax = 1, ymin = 1.5, ymax = 3.5, color = "black", alpha = 0) + labs(title = "Jake Arrieta: Balls v. LHB, 2015") + ylab("Vertical Location (ft.)") + xlab("Horizontal Location (ft): Catcher's View") + labs(color = "Velocity (mph)")
+b_l <- b_l + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,5)) + annotate("rect", xmin = -1, xmax = 1, ymin = 1.5, ymax = 3.5, color = "black", alpha = 0) + labs(title = "Jake Arrieta: Called Balls v. LHB, 2015") + ylab("Vertical Location (ft.)") + xlab("Horizontal Location (ft): Catcher's View") + labs(color = "Velocity (mph)")
 b_l <- b_l + geom_point(size = 3, alpha = .65)
 b_l <- b_l + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_ballL.png", width=600)
-b_l
+print(b_l)
 dev.off()
 
 
@@ -116,7 +117,7 @@ p_r <- p_r + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = 
 p_r <- p_r + geom_point(size = 3, alpha = .65)
 p_r <- p_r + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_swingR.png", width=600)
-p_r
+print(p_r)
 dev.off()
 
 ## Plot of all called strikes
@@ -125,7 +126,7 @@ c_r <- c_r + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = 
 c_r <- c_r + geom_point(size = 3, alpha = .65)
 c_r <- c_r + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_takeR.png", width=600)
-c_r
+print(c_r)
 dev.off()
 
 ## Plot of all foul balls
@@ -134,14 +135,14 @@ f_r <- f_r + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = 
 f_r <- f_r + geom_point(size = 3, alpha = .65)
 f_r <- f_r + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_foulR.png", width=600)
-f_r
+print(f_r)
 dev.off()
 
 ## Plot of all called balls
 b_r <- ggplot(ArrietaBallR, aes(px,pz,color=start_speed))
-b_r <- b_r + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,5)) + annotate("rect", xmin = -1, xmax = 1, ymin = 1.5, ymax = 3.5, color = "black", alpha = 0) + labs(title = "Jake Arrieta: Balls v. RHB, 2015") + ylab("Vertical Location (ft.)") + xlab("Horizontal Location (ft): Catcher's View") + labs(color = "Velocity (mph)")
+b_r <- b_r + scale_x_continuous(limits = c(-3,3)) + scale_y_continuous(limits = c(0,5)) + annotate("rect", xmin = -1, xmax = 1, ymin = 1.5, ymax = 3.5, color = "black", alpha = 0) + labs(title = "Jake Arrieta: Called Balls v. RHB, 2015") + ylab("Vertical Location (ft.)") + xlab("Horizontal Location (ft): Catcher's View") + labs(color = "Velocity (mph)")
 b_r <- b_r + geom_point(size = 3, alpha = .65)
 b_r <- b_r + theme(axis.title = element_text(size = 15, color = "black", face = "bold")) + theme(plot.title = element_text(size = 25, face = "bold", vjust = 1)) + theme(axis.text = element_text(size = 13, face = "bold", color = "black")) + theme(legend.title = element_text(size = 12)) + theme(legend.text = element_text(size = 12))
 png("Arrieta_ballR.png", width=600)
-b_r
+print(b_r)
 dev.off()
