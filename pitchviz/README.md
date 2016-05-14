@@ -15,7 +15,15 @@ Based on <a href="http://www.hardballtimes.com/a-short-ish-introduction-to-using
 
 Examples of the outputs:
 
+`> pitchviz("2015","chn","Jake Arrieta")`
+
 ![Jake Arrieta swinging strikes](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Jake%20Arrieta2015_swingR.png)
+
+`> pitchviz("2015","lan","Clayton Kershaw")`
+
 ![Kershaw swinging strikes](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Clayton%20Kershaw2015_swingR.png)
+
+`> pitchviz("2015","chn","Jon Lester")`
+
 ![Lester LHB balls](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Jon%20Lester2015_ballL.png)
 ![Lester RHB balls](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Jon%20Lester2015_ballR.png)
