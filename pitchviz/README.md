@@ -7,7 +7,7 @@ It will produce 18 different PNG graphs, three for each of six differnet pitch o
 The function takes three parameters, all expressed inside quotation marks:
 <ul><li><b>"pitchyear"</b>, a four-digit year. PitchFX debuted in 2007 and gradually expanded; the further back in time, the greater the chance of errors or missing data.</li>
 <li><b>"team"</b>, a three-character string reflecting the team's city: "bos", "sea", etc. For two-team cities, the third digit reflects the league: for example, "chn" instead of "chc"; "lan" instead of "lad".</li>
-<li><b>"pitchername"</b>, the generally recognized first and last name of a pitcher. For example, "Jake Arrieta" instead of "Jacob Arrieta."</li</ul>
+<li><b>"pitchername"</b>, the generally recognized first and last name of a pitcher. For example, "Jake Arrieta" instead of "Jacob Arrieta."</li></ul>
 
 The script will take a few minutes to run, due to the large amount of data it needs to download.
 
