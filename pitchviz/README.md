@@ -15,7 +15,7 @@ Based on <a href="http://www.hardballtimes.com/a-short-ish-introduction-to-using
 
 Examples of the outputs:
 
-![Jake Arrieta swinging strikes](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/arrieta-pitches/images/Jake%20Arrieta2015_swingR.png)
-![Kershaw swinging strikes](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/arrieta-pitches/images/Clayton%20Kershaw2015_swingR.png)
-![Lester LHB balls](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/arrieta-pitches/images/Jon%20Lester2015_ballL.png)
-![Lester RHB balls](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/arrieta-pitches/images/Jon%20Lester2015_ballR.png)
+![Jake Arrieta swinging strikes](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Jake%20Arrieta2015_swingR.png)
+![Kershaw swinging strikes](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Clayton%20Kershaw2015_swingR.png)
+![Lester LHB balls](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Jon%20Lester2015_ballL.png)
+![Lester RHB balls](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/pitchviz/images/Jon%20Lester2015_ballR.png)
