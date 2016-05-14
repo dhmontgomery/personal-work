@@ -1,4 +1,8 @@
-## This will download MLB data for a  and produce 12 graphs in your working directory of the pitch location and speed of  pitches by outcome.
+## This will download MLB PitchFX data for a given pitcher in a given seasn, and produce 18 graphs in your working directory of the pitch location and speed of pitches by pitch outcome.
+## The function takes three parameters, all expressed inside quotation marks:
+## - "pitchyear", a four-digit year. PitchFX debuted in 2007 and gradually expanded; the further back in time, the greater the chance of errors or missing data.
+## - "team", a three-character string reflecting the team's city: "bos", "sea", etc. For two-team cities, the third digit reflects the league: for example, "chn" instead of "chc"; "lan" instead of "lad".
+## "pitchername", the generally recognized first and last name of a pitcher. For example, "Jake Arrieta" instead of "Jacob Arrieta."
 ## Created based on a tutorial by Bill Petti: http://www.hardballtimes.com/a-short-ish-introduction-to-using-r-for-baseball-research/
 
 pitchviz <- function(pitchyear, team, pitchername) {
@@ -23,6 +27,7 @@ data_slim_Ball <- filter(data_slim, grepl("Ball", des))
 data_slim_Foul <- filter(data_slim, grepl("Foul", des))
 data_slim_Out <- filter(data_slim, grepl("In play, out", des))
 data_slim_Hits <- filter(data_slim, grepl("(In play, r)|(In play, n)", des))
+
 ## Split by handedness
 data_slim_SwingL <- subset(data_slim_Swing, stand == "L")
 data_slim_SwingR <- subset(data_slim_Swing, stand == "R")
