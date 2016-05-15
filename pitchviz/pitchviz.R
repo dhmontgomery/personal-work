@@ -42,7 +42,7 @@ data_slim_OutR <- subset(data_slim_Out, stand == "R")
 data_slim_HitsL <- subset(data_slim_Hits, stand == "L")
 data_slim_HitsR <- subset(data_slim_Hits, stand == "R")
 
-## Plotting the pitcher's four results, for both hands
+## Plotting the pitcher's six results, for both hands
 
 ## Plot of all swinging strikes
 p <- ggplot(data_slim_Swing, aes(px,pz,color=start_speed))
