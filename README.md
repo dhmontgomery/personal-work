@@ -7,7 +7,7 @@ Feel free to [contact me](mailto:dhmontgomery@gmail.com) with any questions or c
 
 Date | Project | Folder
 ---|---------|-------------
-May 11, 2016 | Jake Arrieta pitch visualizations | `arrieta-pitches` 
+May 11, 2016 | MLB pitch visualizations | `pitchviz` 
 July 21, 2015 | [Alphabétisation](http://dhmontgomery.com/2015/07/alphabetisation/) | `1872-french-illiteracy`
 Aug. 28, 2014 | [Deceptively efficient at attracting tourism](http://dhmontgomery.com/2014/08/deceptively-efficient-at-attracting-tourism/) | `tourism-efficiency`
 March 31, 2014 | [Primates of the States](http://dhmontgomery.com/2014/03/primates-of-the-states/) | `state-city-populations`
