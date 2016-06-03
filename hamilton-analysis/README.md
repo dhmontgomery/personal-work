@@ -7,7 +7,7 @@ The four pieces of R code here will, given a proper database of "Hamilton" lyric
 * a word cloud visualizing the most commonly used words
 * the reading level of that character's vocabulary
 
-It will also produce a ["fuzzy c-means cluster"](https://en.wikipedia.org/wiki/Fuzzy_clustering) analysis of the lyrics, which categorizes each character's lyrics by similarity and sorts them into a number of groups. 
+It will also produce a ["fuzzy c-means cluster"](https://en.wikipedia.org/wiki/Fuzzy_clustering) analysis of the lyrics, which categorizes each character's lyrics by similarity and sorts them into a number of groups. (For similar c-means analysis, see my article for the St. Paul Pioneer Press, ["Mark Dayton’s State of the State: Big picture, plenty of data"](http://www.twincities.com/2016/03/08/mark-daytons-state-of-the-state-big-picture-plenty-of-data/) and the [technical explanation](http://www.twincities.com/2016/03/09/what-the-data-says-about-the-state-of-the-state-2/), and my inspiration, David Byler of RealClearPolitics' [analysis of presidential candidate vocabulary](http://www.realclearpolitics.com/articles/2015/07/20/text_mining_the_republican_announcement_speeches_127447.html).)
 
 The `prelim-code.R` file will need to be run first to get the data in the appropriate files and formats. After that, `wordclouds.R`, `reading-level.R` and `cmeans.R` can be run in any order.
 
