@@ -13,6 +13,8 @@ The `prelim-code.R` file will need to be run first to get the data in the approp
 
 ![Eliza/Angelica wordcloud](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/hamilton-analysis/eliza-angelica.png)
 
+Note: this code may require an installation of [TreeTagger](http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/) to run the koRpus package properly. i had considerable difficulty installing it, so if you want to run this code or a variant, I'd recommend trying it without TreeTagger first before attempting to install it.
+
 Unfortunately for replicability of this analysis, the "Hamilton" lyrics are copyrighted, so I'm not republishing the database I created. To replicate my results you will need to recreate the dataset by following the steps below, which took me several hours. You can also adapt them to another corpus of words.
 
 Here's how I produced the database you'll need:
