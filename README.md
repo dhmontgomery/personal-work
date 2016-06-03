@@ -5,6 +5,8 @@ All data here is available under the [Creative Commons Attribution 4.0 Internati
 
 Feel free to [contact me](mailto:dhmontgomery@gmail.com) with any questions or comments.
 
+Code that I've written for my job at the St. Paul Pioneer Press can be found [here](https://github.com/dhmontgomery/pioneer-press-code).
+
 Date | Project | Folder
 ---|---------|-------------
 May 11, 2016 | MLB pitch visualizations | `pitchviz` 
