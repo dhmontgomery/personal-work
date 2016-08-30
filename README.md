@@ -9,6 +9,7 @@ Code that I've written for my job at the St. Paul Pioneer Press can be found [he
 
 Date | Project | Folder
 ---|---------|-------------
+Aug. 30, 2016 | MLB attendance | `mlb-attendance`
 June 2, 2016 | ["With every word, I drop knowledge: A lexical analysis of 'Hamilton'"](http://dhmontgomery.com/2016/03/with-every-word-i-drop-knowledge-a-lexical-analysis-of-hamilton/) | `hamilton-analysis`
 May 11, 2016 | MLB pitch visualizations | `pitchviz` 
 July 21, 2015 | [Alphabétisation](http://dhmontgomery.com/2015/07/alphabetisation/) | `1872-french-illiteracy`
