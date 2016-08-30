@@ -86,4 +86,6 @@ b <- ggplot(attendance, aes(HomeAverage,Capacity)) + # Make the second graph, at
 # Save as a square PNG
 try( # Suppress an apparently harmless error message
 	ggsave("attendance.png",plot=multiplot(a,b), device="png", height=10, width=10),
-	silent = T) 
+	silent = T)
+	
+attendance[,c(2:6)] %>% write.csv("mlb-attendance.csv")
