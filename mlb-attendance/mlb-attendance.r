@@ -1,4 +1,3 @@
-
 # Load libraries
 library(rvest)
 library(ggplot2)
@@ -6,6 +5,7 @@ library(ggrepel)
 library(dplyr)
 library(scales)
 library(grid)
+library(lubridate)
 source("http://peterhaschke.com/Code/multiplot.R") # Load a function to plot multiple ggplot charts
 
 # Download attendance data
