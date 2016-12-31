@@ -1,4 +1,4 @@
-# Did more famous people really die in 2016 than usual?
+# Did more famous people than usual really die in 2016?
 
 I analyzed this issue in an article published [here](http://dhmontgomery.com/files/wikipediadeaths.html).
 
