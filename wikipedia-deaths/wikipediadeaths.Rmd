@@ -1,0 +1,263 @@
+---
+title: "Did more famous people really die in 2016?"
+author: "David H. Montgomery"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(rvest)
+library(jsonlite)
+library(knitr)
+library(rmarkdown)
+library(ggthemes)
+library(shiny)
+```
+
+```{r}
+# Load our data from CSV format. This presumes the CSV is in your working director.
+deaths <- read.csv("deaths.csv",stringsAsFactors = F)
+```
+
+On Tuesday, actress and author Carrie Fisher died, setting off a wave of lamentations not just for the beloved Fisher, but for the entire calendar year 2016.
+
+The just-ending year has seen not just the deaths of Fisher and pop star George Michael on Christmas Day, but other luminaries of sports, entertainment and politics: Prince and David Bowie, Muhammad Ali and Arnold Palmer, Fidel Castro and Nancy Reagan, Alan Rickman and John Glenn, among many others.
+
+Combined with some people's dissatisfaction with 2016's political developments, these deaths have created an impression that the year 2016 has been particularly bad, an *[annus horribilis](https://en.wikipedia.org/wiki/Annus_horribilis)* for the Anglo-American world.
+
+But all these deaths are particularly raw and fresh. Has 2016 really seen more famous people die than, say, 2011, when Steve Jobs, Amy Winehouse, Osama bin Laden, Elizabeth Taylor, Joe Frazier, Václav Havel, Kim Jong-Il and Muammar Gaddafi passed away?[^1]
+
+There's no easy way to measure collective grief, especially when it varies so widely from person to person. Prince's death might have devasted one person while another would have just noted it as a curiosity.
+
+Similarly, there's no right or wrong way to grieve, and no one's wrong to feel personally affected by any or all of the celebrity deaths in 2016. 
+
+But there is an empirical question we can try to answer: have more significant people really died in 2016 than past years? Or does it just seem that way because of the recency of the deaths or emotional carryover from the tumultuous year in politics?
+
+You can make a good data-driven argument that 2016 has in fact seen more significant deaths than recent years.
+
+There's no one true way to answer that question. BBC News, for one, [looked to news obituaries](http://www.bbc.com/news/magazine-38329740) for its answer. (They came to a similar conclusion.)
+
+My approach is a little different: use the open-source, user-edited [Wikipedia's](https://en.wikipedia.org/) records of deaths each year (while aware of Wikipedia's many flaws as a source[^2]). Among the categories Wikipedia can apply to every article, alongside things like "20th Century American singers" and "African-American male actors" are categories like ["2016 deaths"](https://en.wikipedia.org/wiki/Category:2016_deaths). There's one of those for every year, and the page includes every person with a Wikipedia article who's marked as having died in that year.
+
+I used an [R script](https://en.wikipedia.org/wiki/R_(programming_language)) to compile the English-language Wikipedia pages for every person marked as having died in 2016 through Dec. 30 — as well as those who've died in every year going all the way back to 1990. You have to be somewhat notable to warrant a surviving Wikipedia page, so this is a rough proxy for notable deaths even if most of the tens of thousands of people in the dataset weren't world-famous like Carrie Fisher or Fidel Castro. But we can also look at how long each article is as a very rough proxy for a person's importance.[^3]
+
+##The most famous celebrities
+
+For example, here's the number of Wikipedia death articles each year that are at least 80,000 characters long. That's a cutoff that in 2016 includes [basketball coach Pat Summitt](https://en.wikipedia.org/wiki/Pat_Summitt), [astronaut John Glenn](https://en.wikipedia.org/wiki/John_Glenn), [Supreme Court Justice Antonin Scalia](https://en.wikipedia.org/wiki/Antonin_Scalia), [First Lady Nancy Reagan](https://en.wikipedia.org/wiki/Nancy_Reagan), [boxer Muhammad Ali](https://en.wikipedia.org/wiki/Muhammad_Ali) and musicians [Merle Haggard](https://en.wikipedia.org/wiki/Merle_Haggard), [George Michael](https://en.wikipedia.org/wiki/George_Michael), [Leonard Cohen](https://en.wikipedia.org/wiki/Leonard_Cohen), [Prince](https://en.wikipedia.org/wiki/Prince_(musician)) and [David Bowie](https://en.wikipedia.org/wiki/David_Bowie) — but not people like Fisher, hockey legend [Gordie Howe](https://en.wikipedia.org/wiki/Gordie_Howe), [Israeli politician Shimon Peres](https://en.wikipedia.org/wiki/Shimon_Peres) or [author and Holocaust survivor Elie Wiesel](https://en.wikipedia.org/wiki/Elie_Wiesel). In 2015 it would include [Singaporean founder Lee Kuan Yew](https://en.wikipedia.org/wiki/Lee_Kuan_Yew) and actors [Christopher Lee](https://en.wikipedia.org/wiki/Christopher_Lee) and [Leonard Nimoy](https://en.wikipedia.org/wiki/Leonard_Nimoy) but not singers [B.B. King](https://en.wikipedia.org/wiki/B.B._King) or [Scott Weiland](https://en.wikipedia.org/wiki/Scott_Weiland) or baseball player [Yogi Berra](https://en.wikipedia.org/wiki/Yogi_Berra).
+
+```{r}
+
+ggplot(deaths %>% filter(bytes >= 80000) %>% group_by(year) %>% summarize(count = n()), aes(year, count)) +
+        geom_col() +
+        scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015)) +
+        scale_y_continuous("Number of deaths", limits=c(0,25)) +
+        theme_minimal() +
+        labs(title="Number of death articles each year longer than 80,000 characters",
+             caption = "Graphic by David H. Montgomery, dhmontgomery.com")
+
+```
+
+Among these most famous people you can see 2016 has significantly more deaths than any past year.
+
+What about a lower threshold? Cutting off articles at 40,000 characters would add people like [police shooting victim Keith Lamont Scott](https://en.wikipedia.org/wiki/Shooting_of_Keith_Lamont_Scott), [murdered British M.P. Jo Cox](https://en.wikipedia.org/wiki/Jo_Cox), [conservative activist Phyllis Schlafly](https://en.wikipedia.org/wiki/Phyllis_Schlafly), [mixed martial artist Kimbo Slice](https://en.wikipedia.org/wiki/Kimbo_Slice), [actress Zsa Zsa Gabor](https://en.wikipedia.org/wiki/Zsa_Zsa_Gabor) and author [Harper Lee](https://en.wikipedia.org/wiki/Harper_Lee). There are still some famous people below this line, like [baseball player José Fernández](https://en.wikipedia.org/wiki/José_Fernández_(pitcher)) and [news anchor Gwen Ifill](https://en.wikipedia.org/wiki/Gwen_Ifill), but also many more people who are not household names in the West compared to above that line.
+
+```{r}
+
+ggplot(deaths %>% filter(bytes >= 40000) %>% group_by(year) %>% summarize(count = n()), aes(year, count)) +
+        geom_col() +
+        scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015)) +
+        scale_y_continuous("Number of deaths") +
+        theme_minimal() +
+        labs(title="Number of death articles each year longer than 40,000 characters",
+             caption = "Graphic by David H. Montgomery, dhmontgomery.com")
+
+```
+
+This is less dramatic — the highest of all time, but in line with a trend of more articles rather than an aberration. Still, a peak is a peak. If the data had shown a significant decrease in deaths this year, that could suggest people are particularly wrong to feel like there are more celebrity deaths in 2016 than normal. This leaves the possibility open.
+
+You can experiment yourself with other thresholds than 40,000 and 80,000 in the interactive graphic below!
+
+<iframe src="https://dhmontgomery.shinyapps.io/deaththreshold/" style="border: none; width: 100%; height: 640px"></iframe>
+
+
+
+Another way to look at the same question: let's take the 50 longest articles from each year and see how their length compares.
+
+```{r}
+top50 <- deaths %>% group_by(year) %>% top_n(n=50, wt=bytes)
+top50$title <- gsub("Shooting of ","",top50$title)
+top50avg <- top50 %>% group_by(year) %>% summarise(average = mean(bytes))
+
+ggplot(top50 %>% group_by(year) %>% summarize(average = median(bytes)), aes(year,average)) +
+           geom_col() +
+    #geom_line() +
+    geom_text(aes(label=round(average,0)), angle=90, color="white", hjust=1.1) +
+    theme_minimal() +
+    scale_y_continuous("Average article length in characters",labels = comma, limits=c(0,80000)) +
+    scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015)) +
+    labs(title="Average length of 50 longest Wikipedia death articles each year",
+         caption="Graphic by David H. Montgomery, dhmontgomery.com") +
+    theme(panel.grid.minor.x = element_blank())
+
+```
+
+Again, 2016 is a peak; again it's not in a world by itself. 
+
+What if we broaden our scope significantly? Instead of looking at just the most famous people, let's look at every single person with a Wikipedia page. That's a much lower standard than the celebrities we've been discussing so far. Though most people don't meet Wikipedia's [standards](https://en.wikipedia.org/wiki/Wikipedia:Notability) of "significant coverage in reliable sources that are independent of the subject", that does include lots of people with only minor significance: semi-obscure authors, backbencher state legislators and backup athletes. But looking at the entire dataset shows some interesting trends: 
+
+```{r}
+deaths.bytes <- deaths %>% group_by(year) %>% summarise(median = median(bytes), total = sum(bytes))
+
+ggplot(deaths.bytes, aes(year,median)) +
+    #geom_col() +
+    geom_line() +
+    geom_point() +
+    theme_minimal() +
+    labs(title="Median page size for Wikipedia death pages by year",
+         caption="Graph by David H. Montgomery, dhmontgomery.com") +
+    theme(panel.grid.minor.x = element_blank()) +
+    scale_y_continuous("Median size in characters",labels = comma) +
+    scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015))
+
+```
+
+Looking at the median article length removes one piece of bias: the fact that there are just more Wikipedia articles each year. What we see here is that 2016 — and 2015 before it — have significantly longer articles among the thousands of people who qualify for articles. Just as interestingly, we see that's not automatic — this measure plateaued and even decreased for much of the current decade.
+
+In fact, 2016 actually has fewer death articles overall than past years, even though the ones it does have are longer: 
+
+```{r}
+deaths.year <- deaths %>% group_by(year) %>% summarize(count = n())
+ggplot(deaths.year, aes(year,count)) +
+    geom_col() +
+    theme_minimal() +
+    labs(title="Total Wikipedia pages for deaths by death year",
+         caption="Graph by David H. Montgomery, dhmontgomery.com") +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+    scale_y_continuous("Total pages",labels = comma) +
+    scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015))
+
+
+```
+
+I'd argue this roughly 12 percent decline doesn't disprove the *annus horribilis* theory, in part because it's still early — it's possible that among the many lesser-known figures on Wikipedia are plenty who have not yet been marked deceased on Wikipedia.
+
+##Reasons for caution
+
+This dataset suggests that 2016 could in fact have seen more celebrity deaths than usual, though it doesn't prove it. But there are several significant weaknesses for trying to analyze this question.
+
+The first has to do with geography. The sense of a plethora of celebrity deaths in 2016 is primarily one among Americans, or more broadly speaking Anglo-Americans. But even the English-language Wikipedia has lots and lots of articles about non-Americans — lots of really long articles. Many of the longest articles of 2016 deaths are not people whose passing would have made Americans moved by the deaths of Carrie Fisher or John Glenn blink an eye.
+
+For example, can you guess which of 2016's deaths has the longest Wikipedia article? If you're a typical American, you'd never figure it out. It's not Prince, Bowie or Muhammad Ali, or even Fidel Castro. It's [Johan Cruyff](https://en.wikipedia.org/wiki/Johan_Cruyff), a Dutch soccer player and coach.
+
+Here's the 20 longest articles of 2016 deaths, which includes not just famous Americans but the [King of Thailand](https://en.wikipedia.org/?curid=203756), a [French composer](https://en.wikipedia.org/?curid=66592), a [Scottish serial killer](https://en.wikipedia.org/wiki/Robert_Black_(serial_killer)), a [German historian](https://en.wikipedia.org/?curid=2317493), and [Iranian](https://en.wikipedia.org/?curid=400421) and [French](https://en.wikipedia.org/?curid=496410) filmmakers.
+
+(Also of note: there are only two women among the 20 longest articles.)
+
+```{r}
+toplist <- top50 %>% filter(year == 2016) %>% rename(characters = bytes) %>% arrange(desc(characters)) %>% mutate(title=paste0("[",title,"](http://en.wikipedia.org/?curid=",pageid,")"))
+kable(toplist[1:20,c(2,4)])
+```
+
+The other major limit is that there's no easy way to filter by reason for prominence. Americans don't feel like 2016 was an *annus horribilis* just because some famous literary authors or world leaders died. It feels that way because a number of famous entertainers passed away. An ideal analysis would have some way to break out articles into rough groups: athletes, entertainers, politicians, authors, etc. 
+
+While Wikipedia does have a number of categories, they're unfortunately far more granular than we need. Fisher, for example, is [listed under](https://en.wikipedia.org/wiki/Carrie_Fisher#External_links) "American film actresses," "American television actresses," "20th-century American actresses," "21st-century American actresses," "Actresses from Beverly Hills, California," "Alumni of the Central School of Speech and Drama," "American agnostics" and "Jewish agnostics" — but not just "Americans" or "Actors."
+
+This kind of information could be hand-coded, but that would be a laborious process that would become even more so the more people and years were included.
+
+So we can't say for certain whether more Americans or more celebrities died in 2016 — the kind of questions we're trying to get at. All we can say is that it's possible that more notable inhabitants of the Earth died in the past year than in prior years.
+
+---
+
+This report was generated using [R](https://en.wikipedia.org/wiki/R_(programming_language)), [ggplot](http://ggplot.yhathq.com) and [R Markdown](http://rmarkdown.rstudio.com). Full data and the R scripts used to generate this report are available on Github. Below are several additional charts for people who want to learn more: 
+
+```{r}
+ggplot(deaths, aes(bytes, group=year)) +
+    geom_freqpoly(bins=50, color="light grey", alpha=.5) +
+    geom_freqpoly(data=deaths %>% filter(year == 2016), bins=50, color="red") +
+    scale_x_log10("Characters in article (log scale)", labels=comma, breaks=c(10,100,1000,10000,100000)) +
+    #scale_y_log10(labels=comma, breaks = c(1,10,100,1000), limits = c(1,1000)) +
+    theme_minimal() +
+    labs(title="Wikipedia pages of deaths by article size, by year",
+         caption="Graphic by David H. Montgomery, dhmontgomery.com",
+         y="Number of articles")
+```
+
+
+```{r}
+ggplot(deaths.bytes, aes(year,total)) +
+#    geom_col() +
+    geom_line() +
+    geom_point() +
+    theme_minimal() +
+    labs(title="Total size for each year's Wikipedia death pages",
+         caption="Graph by David H. Montgomery, dhmontgomery.com") +
+    theme(panel.grid.minor.x = element_blank()) +
+    scale_y_continuous("Total size in characters",labels = comma) +
+    scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015))
+
+```
+
+The very longest death article each year on Wikipedia varies widely in length from year to year; perhaps surprisingly, Watergate prosecutor [Archibald Cox's](https://en.wikipedia.org/wiki/Archibald_Cox) long and distinguished career makes him the longest death article in the past 27 years.
+
+```{r}
+top1 <- top50 %>% group_by(year) %>% top_n(n=1, wt=bytes) %>% mutate(title=paste0("[",title,"](http://en.wikipedia.org/?curid=",pageid,")"))
+ggplot(top1, aes(year,bytes)) +
+    geom_col() +
+    scale_y_continuous("Size in characters",labels=comma) +
+    scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015)) +
+    labs(title="Length of longest Wikipedia death article each year",
+         subtitle="Label is longest article for each year",
+         caption="Graphic by David H. Montgomery, dhmontgomery.com") +
+    theme_minimal() +
+    theme(panel.grid.minor.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+#    geom_rect(aes(xmin=1989,ymin=300001,xmax=2017,ymax=500001), fill="white") +
+    geom_text(data = top50 %>% group_by(year) %>% top_n(n=1, wt=bytes), aes(label=title), angle=90, hjust=1.1, vjust=0.4, color="white", size=2.5)
+#    geom_text(data= top50 %>% top_n(n=1, wt=bytes), aes(label=title), angle=90, hjust=-.2, size=3)
+```
+
+
+```{r}
+ggplot(deaths, aes(year,bytes, group=year)) +
+    stat_boxplot(geom="errorbar") +
+    geom_boxplot(outlier.size=0.7) +
+    theme_minimal() +
+    scale_y_log10("Size in characters",labels=comma, breaks = c(10,100,1000,10000,100000)) +
+    labs(title="Size of Wikipedia articles for each year's deaths",
+         caption="Graphic by David H. Montgomery, dhmontgomery.com") +
+    scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015))
+
+
+```
+
+There's been a gradual rise in the median article length over the past 27 years, but not a dramatic one. There seems to be more variation among the outliers: unusually long or short articles. 
+
+```{r}
+ggplot(top50, aes(year,bytes)) +
+    geom_point(size=0.4) +
+    scale_y_continuous("Size in characters",labels=comma, limits = c(30000,500000), breaks=c(100000,200000,300000)) +
+    scale_x_continuous("", breaks=c(1990,1995,2000,2005,2010,2015)) +
+    labs(title="Length of top 50 Wikipedia death articles for each year (1990-2016)",
+         subtitle="Label is longest article for each year",
+         caption="Graphic by David H. Montgomery, dhmontgomery.com") +
+    theme_classic() +
+    theme(panel.grid.minor.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+#    geom_rect(aes(xmin=1989,ymin=300001,xmax=2017,ymax=500001), fill="white") +
+    geom_text(data= top50 %>% top_n(n=1, wt=bytes), aes(label=title), angle=90, hjust=-.2, size=3)
+
+```
+ 
+
+[^1]: Aside from that year's prevalence of dictatorial deaths, which might not inspire the same level of grief.
+[^2]: Wikipedia is, of course, rife with flaws, none moreso than that it depends on the work of a large cadre of volunteer authors and editors to stay up to date — and some pages get far more attention than others. More recent events are likely to be more thoroughly covered on Wikipedia than events of similar magnitude that happened before Wikipedia was created in 2001. With those caveats in mind, this should not be seen as a definitive answer to our question about how 2016 deaths compare.
+[^3]: There are some flaws to this aside from the obvious one that a less-notable person with a particularly enthusiastic fan or fans could end up with a longer article than a more famous person. For one, many authors, musicians and actors, for example, have their bibliography, filmography or discography broken into a separate page from their main bio, which thus wouldn't be counted. There are also a few special cases. In 2011, for example, Wikipedia has separate articles for "[Osama bin Laden](https://en.wikipedia.org/wiki/Osama_bin_Laden)" and "[Death of Osama bin Laden](https://en.wikipedia.org/wiki/Death_of_Osama_bin_Laden)," both of which are tagged as "2011 Deaths." (Interestingly the "Death of" article is considerably longer than bin Laden's main bio.)
