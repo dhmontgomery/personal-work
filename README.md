@@ -9,6 +9,7 @@ Code that I've written for my job at the St. Paul Pioneer Press can be found [he
 
 Date | Project | Folder
 ---|---------|-------------
+Feb. 4, 2017 | ["The Accidental Republic - Nerd Out"](http://dhmontgomery.com/2017/02/the-accidental-republic-nerd-out/) | `accidental-republic`
 Dec. 31, 2016 | ["Did more famous people than usual really die in 2016?"](http://dhmontgomery.com/files/wikipediadeaths.html) | `wikipedia-deaths`
 Aug. 30, 2016 | MLB attendance | `mlb-attendance`
 June 2, 2016 | ["With every word, I drop knowledge: A lexical analysis of 'Hamilton'"](http://dhmontgomery.com/2016/03/with-every-word-i-drop-knowledge-a-lexical-analysis-of-hamilton/) | `hamilton-analysis`
