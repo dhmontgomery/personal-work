@@ -9,7 +9,7 @@ Code that I've written for my job at the St. Paul Pioneer Press can be found [he
 
 Date | Project | Folder
 ---|---------|-------------
-March. 28, 2017 | ["WeRateDogs analysis"](http://dhmontgomery.com/2017/03/weratedogs-analysis/) | `dogrates`
+March. 28, 2017 | ["WeRateDogs analysis"](http://dhmontgomery.com/2017/03/dogrates/) | `dogrates`
 Feb. 4, 2017 | ["The Accidental Republic - Nerd Out"](http://dhmontgomery.com/2017/02/the-accidental-republic-nerd-out/) | `accidental-republic`
 Dec. 31, 2016 | ["Did more famous people than usual really die in 2016?"](http://dhmontgomery.com/files/wikipediadeaths.html) | `wikipedia-deaths`
 Aug. 30, 2016 | MLB attendance | `mlb-attendance`
