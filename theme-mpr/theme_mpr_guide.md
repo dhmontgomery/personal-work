@@ -164,7 +164,7 @@ p <- ggplot(kstp, aes(candidate, approval, fill = party)) +
 addlogo(p)
 ```
 
-<img src="C:\Users\DMONTG~1\AppData\Local\Temp\RtmpYnfytc\file71c16147bc5.png" width="2029" />
+![](theme_mpr_guide_files/figure-markdown_github-ascii_identifiers/addlogo-1.png)
 
 (We also changed the code slightly, storing the original graph as an object `p` and then calling that object as the variable for `addlogo()`. This is necessary.)
 
