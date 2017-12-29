@@ -7,6 +7,8 @@ Hadley Wickham's `ggplot` package is a powerful and flexible way to make graphic
 
 Fortunately, `ggplot` supports custom themes that can radically change the appearance of its graphs. I wrote one such theme, `theme_mpr`, designed to apply MPR News' graphics style to `ggplot` graphs. This is a guide for how to apply that style.
 
+(The actual theme belongs to MPR and is not shared here; the following guide was produced for MPR News and is shared here with permission as an example of my work there.)
+
 Beginning
 ---------
 
