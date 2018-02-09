@@ -9,6 +9,7 @@ Code that I wrote for my former job at the St. Paul Pioneer Press can be found [
 
 Date | Project | Folder
 ---|---------|-------------
+Monday, Feb. 5, 2017 | Super Bowl length comparisons | `super-bowl-lengths`
 Dec. 29, 2017 | MPR News `ggplot` theme explanation | `theme_mpr`
 March 28, 2017 | ["WeRateDogs analysis"](http://dhmontgomery.com/2017/03/dogrates/) | `dogrates`
 Feb. 4, 2017 | ["The Accidental Republic - Nerd Out"](http://dhmontgomery.com/2017/02/the-accidental-republic-nerd-out/) | `accidental-republic`
