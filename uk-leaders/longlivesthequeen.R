@@ -133,7 +133,7 @@ overlaps <- data.frame("prime_minister" = pms$known_as, "lifespan" = pms$lifespa
 for(i in 1:nrow(royals)) { # Cycle through the royals
 	for(j in 1:nrow(overlaps)) { # And the PMs
 		# Calculate the overlap in days between PMs' lives and royals' reigns
-		overlaps[j, i+3] <- Overlap(c(pms$birthdate[j], pms$deathdate[j]), c(royals$reign_start[i], royals$reign_end[i])) # Seriously this is a really cool.
+		overlaps[j, i+3] <- Overlap(c(pms$birthdate[j], pms$deathdate[j]), c(royals$reign_start[i], royals$reign_end[i])) # Seriously this is really cool.
 	}
 }
 # Add clean column names to our new dataframe, including filling the full list of monarch names
