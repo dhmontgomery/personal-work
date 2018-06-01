@@ -6,7 +6,7 @@ You can view my slide deck [here](http://dhmontgomery.com/files/nerdsmn_maps.htm
 
 The bulk of my presentation (after the "Live demo" slide) was taken up with a live demo. 
 
-You can view my walkthrough for creating that presentation [here](http://dhmontgomery.com/files/nerdsmn_maps.html#1). That contains links to download all the map files necessary to create the project. You'll also need the `zoning_colors.qml` file included in this folder. 
+You can view my walkthrough for creating that presentation [here](https://github.com/dhmontgomery/personal-work/blob/master/nerd-night-map/walkthrough.md). That contains links to download all the map files necessary to create the project. You'll also need the `zoning_colors.qml` file included in this folder. 
 
 Following those instructions should create something that looks a little like this:
 
