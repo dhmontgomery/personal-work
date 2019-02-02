@@ -4,7 +4,6 @@
 library(rvest)
 library(dplyr)
 library(tidyr)
-devtools::install_github("hadley/ggplot2") # Install beta version of ggplot with subtitle support
 library(ggplot2)
 
 setwd("~/Dropbox/Sharing Folder/Code/World Series ratings")
