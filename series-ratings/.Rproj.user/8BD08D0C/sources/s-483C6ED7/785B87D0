@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549082710869.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3373964575",
+    "id" : "785B87D0",
+    "lastKnownWriteTime" : 1549082672,
+    "last_content_update" : 1549082672,
+    "path" : "~/GitHub/personal-work/series-ratings/seriesratings.r",
+    "project_path" : "seriesratings.r",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
