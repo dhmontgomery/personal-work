@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549083375585.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "428B5382",
+    "lastKnownWriteTime" : 4337024768,
+    "last_content_update" : 1549083375585,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "DB5881",
+        "caption" : "ratings",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ratings&cache_key=DB5881",
+        "displayedObservations" : "245",
+        "environment" : "",
+        "object" : "ratings",
+        "preview" : "0",
+        "totalObservations" : "245",
+        "variables" : "7"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
