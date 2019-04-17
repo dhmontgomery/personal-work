@@ -36,10 +36,10 @@ attendance <- url %>%
 		   Abbrev = c("ARI","ATL","BAL","BOS","CHC","CHW","CIN","CLE","COL","DET","HOU","KCR","LAA","LAD","MIA","MIL","MIN","NYM","NYY","OAK","PHI","PIT","SDP","SFG","SEA","STL","TBR","TEX","TOR","WSN")) # Add three-letter labels for each team, for the plotting
 
 a <- ggplot(attendance, aes(HomeAverage,HomePct)) + # Make the first graph, attendance vs. percent attendance
-    geom_point(size=1) + # Tiny points
     geom_text_repel( # This plots the labels, but around the points.
     	aes(label=Abbrev), 
     	size = 3) + # Set the font size
+	geom_point(size=1) + # Tiny points
 	scale_x_continuous(labels=comma, # Insert commas into the x-axis labels
 					   breaks=c(15000,25000,35000,45000,55000)) + # Set the breaks
 	scale_y_continuous(labels=percent_format(accuracy = 1)) + # Convert the y-axis into percentages.
@@ -53,8 +53,8 @@ a <- ggplot(attendance, aes(HomeAverage,HomePct)) + # Make the first graph, atte
     	
 
 b <- ggplot(attendance, aes(HomeAverage,Capacity)) + # Make the second graph, attendance vs. capacity
-    geom_point(size=1) + # Tiny points
     geom_text_repel(aes(label=Abbrev), size = 3) + #Set the font size
+	geom_point(size=1) + # Tiny points
     scale_x_continuous(labels=comma, breaks=c(15000,25000,35000,45000,55000)) +
 	scale_y_continuous(labels=comma_format(scale = 0.001, suffix = "K"), limits=c(20000,60000)) +
 	labs(caption = "By David Montgomery, github.com/dhmontgomery",
