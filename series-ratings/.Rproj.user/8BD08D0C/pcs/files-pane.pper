@@ -1,0 +1,9 @@
+{
+    "path" : "~/GitHub/personal-work/series-ratings",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
