@@ -9,6 +9,8 @@ Code that I wrote for my former job at the St. Paul Pioneer Press can be found [
 
 Date | Project | Folder
 ---|---------|-------------
+Sunday, July 26, 2020 | Libsyn stats scraper | `scrape_libsyn`
+Wednesday, June 3, 2020 | Write QGIS-friendly CSVs | `write_csv_qgis`
 Thursday, April 12, 2018 | "A Demo of Digital Mapping" | `nerd-night-map`
 Tuesday, March 27, 2018 | ["Long lives the queen"](http://dhmontgomery.com/2018/03/long-lives-the-queen/) | `uk-leaders`
 Monday, Feb. 5, 2017 | Super Bowl length comparisons | `super-bowl-lengths`
