@@ -6,7 +6,7 @@ So I wrote a function in R that will take your Libsyn login info and automatical
 
 `scrape_libsyn()` requires four inputs:
 
-- `show_id`` is a unique ID number for your show that can be tricky to get. I found mine by visiting the Stats page, viewing the source code, and searching for "filterId"
+- `show_id` is a unique ID number for your show that can be tricky to get. I found mine by visiting the Stats page, viewing the source code, and searching for "filterId"
 - `state_date` is the first day of stats you want to pull — probably your Episode 1 release date. This should be in format "YYYY-MM-DD"
 - `username` is the email address you use as your username to log in to Libsyn
 - `password` is your password
