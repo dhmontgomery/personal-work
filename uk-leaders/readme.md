@@ -6,7 +6,7 @@ All of the code and data here is released under the [MIT License](https://github
 
 `uk_monarchs.csv` contains basic bigraphical information for each monarch of England and Breat Britain dating back to the [Restoration](https://en.wikipedia.org/wiki/Restoration_(1660))
 
-`uk_prime_ministers.csv` contains basic biographical information on every prime minister from Robert Walpole through to Theresa May.
+`prime-ministers.csv` contains basic biographical information on every prime minister from Robert Walpole through to Theresa May.
 
 Currently living prime ministers and monarchs have no information listed for date of death.
 
@@ -23,6 +23,6 @@ And:
 
 ![PM lifespans](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/uk-leaders/images/plot_timeline.png)
 
-Finally, this folder contains `uk-pop-pyramid.csv`, a spreadsheet of the UK population by age [from the Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/bulletins/nationalpopulationprojections/2016basedstatisticalbulletin). This data will be used by `longlivesthequeen.R` to create a British population pyramid with those born before and during Queen Elizabeth II's reign broken out:
+Finally, this folder contains `pop-pyramid.csv`, a spreadsheet of the UK population by age [from the Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/bulletins/nationalpopulationprojections/2020basedinterim). This data will be used by `longlivesthequeen.R` to create a British population pyramid with those born before and during Queen Elizabeth II's reign broken out:
 
 ![UK population pyramid](https://raw.githubusercontent.com/dhmontgomery/personal-work/master/uk-leaders/images/poppyramid.png)

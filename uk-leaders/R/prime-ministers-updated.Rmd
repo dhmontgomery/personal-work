@@ -1,0 +1,241 @@
+---
+title: "Long Lives the Queen"
+author: "David H. Montgomery"
+date: '2022-06-02'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(scales)
+library(lubridate)
+library(RColorBrewer)
+library(DescTools)
+library(ggthemes)
+library(patchwork)
+library(ggtext)
+library(knitr)
+library(rvest)
+library(httr)
+library(grid)
+library(gridExtra)
+library(here)
+library(themedhm)
+```
+
+```{r loaddata}
+uk_pop <- read_csv(here("data/pop-pyramid.csv"), skip = 3) %>%
+	janitor::clean_names()
+
+pm_bios <- read_html("https://en.wikipedia.org/wiki/List_of_prime_ministers_of_the_United_Kingdom_by_age") %>% 
+	html_nodes(xpath = '//*[@id="mw-content-text"]/div[1]/table[2]') %>%
+	html_table() %>%
+	pluck(1) %>%
+	janitor::clean_names() %>%
+	separate(born, "born", sep = "\\)", extra = "drop") %>%
+	separate(death, "death", sep = "\\)", extra = "drop") %>%
+	mutate(born = str_remove_all(born, "\\(") %>% as_date(),
+		   death = str_remove_all(death, "\\(") %>% as_date()) %>%
+	select(no, name, born, death) %>%
+	separate(name, c("name", "title"), sep = ",", fill = "left") %>%
+	mutate(title = str_remove_all(title, ordinal(1:20) %>% str_flatten(collapse = "|")) %>% str_trim()) %>%
+	filter(!is.na(born)) %>%
+	select(-name) %>%
+	mutate(no = as.numeric(no))
+
+GET("https://github.com/jackobailey/britpol/blob/master/data/prime_ministers.rda?raw=true", write_disk(tmp <- tempfile()))
+load(tmp)
+pms_processed <- prime_ministers %>%
+	mutate(end = case_when(end == max(end) ~ today(), TRUE ~ end)) %>%
+	mutate(length = end - start) %>%
+	mutate(prime_minister = str_remove_all(prime_minister, "Lord ")) %>%
+	left_join(.,
+			  {.} %>% group_by(prime_minister) %>%
+			  	filter(start == min(start)) %>%
+			  	rowid_to_column(var = "no") %>%
+			  	select(no, prime_minister),
+			  by = "prime_minister") %>%
+	left_join(pm_bios, by = "no") %>%
+	mutate(death = case_when(is.na(death) ~ today(), TRUE ~ death)) %>%
+	mutate(age_at_start = (start - born) %>% as.interval(born) %>% as.numeric("years"),
+		   age_at_end = (end - born) %>% as.interval(born) %>% as.numeric("years"),
+		   lifespan_days = (death - born) %>% as.interval(born) %>% as.numeric("days"))
+
+royals <- read_csv(here("data/uk_monarchs.csv")) %>% 
+	mutate(reign_end = ifelse(is.na(reign_end), today(), reign_end) %>% as_date(),
+		   deathdate = ifelse(is.na(deathdate), today(), deathdate) %>% as_date(),
+		   reign_length = (reign_end - reign_start) %>% as.interval(reign_start) %>% as.numeric("days"),
+		   lifespan_days = (deathdate - birthdate) %>% as.interval(birthdate) %>% as.numeric("days"),
+		   regal_name = replace(as.character(regal_name), regal_name == "Mary II", "William & Mary"),
+		   sex = replace(as.character(sex), regal_name == "William & Mary", "both")) %>%
+	mutate(reign_start = case_when(regal_name == "William III" ~ lag(reign_end), TRUE ~ reign_start))
+```
+
+```{r crunchdata}
+overlaps <- tibble("prime_minister" = pms_processed$title,
+				   "lifespan" = pms_processed$lifespan_days,
+				   "order" = as.numeric(row.names(pms_processed)))
+
+for(i in 1:nrow(royals)) {
+	for(j in 1:nrow(overlaps)) {
+		overlaps[j, i+3] <- Overlap(c(pms_processed$born[j], pms_processed$death[j]), c(royals$reign_start[i], royals$reign_end[i]))
+	}
+}
+names(overlaps) <- c("prime_minister", "pm_lifespan", "order", royals$regal_name)
+overlaps <- distinct(overlaps, prime_minister, .keep_all = TRUE)
+
+overlaps_tall <- overlaps %>%
+	pivot_longer(4:19, names_to = "monarch", values_to = "overlap_days") %>%
+	filter(overlap_days !=0) %>% 
+	arrange(order) %>%
+	mutate(pct = overlap_days / pm_lifespan) %>%
+	left_join(royals %>% select(regal_name, monarch_sex = sex), by = c("monarch" = "regal_name"))
+
+overlaps_by_gender <- overlaps_tall %>%  
+	group_by(prime_minister, order, monarch_sex) %>%
+	summarize(pct = sum(pct)) %>%
+	ungroup() %>%
+	mutate(prime_minister = prime_minister %>% as.factor() %>% fct_reorder(order),
+		   monarch_sex = monarch_sex %>% as.factor() %>% fct_relevel("female", "male")) %>%
+	arrange(order)
+```
+
+```{r chart1}
+p1 <- uk_pop %>%
+	select(age_group, contains("2020")) %>%
+	pivot_longer(-age_group) %>%
+	mutate(name = str_remove_all(name, "2020") %>% str_to_title()) %>%
+	mutate(value = case_when(name == "Male" ~ value * -1, TRUE ~ value)) %>%
+	# filter(age_group == 68) %>%
+	# pivot_wider()
+	ggplot(aes(x = age_group, y = value, fill = name, color = name)) +
+	geom_col(width = 1) +
+	geom_area(data = . %>% filter(age_group >= 70), color = "black", size = 1) +
+	geom_segment(data = . %>% filter(age_group == 70) %>% pivot_wider(),
+				 aes(y = Male, yend = Female, x = 70, xend = 70), inherit.aes = FALSE, size = 1) +
+	annotate(geom = "text", x = 75, y = 0, label = "Born before Elizabeth's reign", color = "white") +
+	scale_x_continuous(breaks = seq(0, 100, 20), expand = expansion(mult = 0)) +
+	scale_y_continuous(breaks = seq(-400000, 400000, 200000), labels = c("400K", "200K", "0", "200K", "400K")) +
+	scale_color_brewer(palette = "Dark2") +
+	scale_fill_brewer(palette = "Dark2") +
+	coord_flip() +
+	theme_dhm() +
+	theme(panel.border = element_blank(),
+		  plot.background = element_rect(fill = "white", color = NA),
+		  axis.title.x = element_blank(),
+		  plot.subtitle = element_markdown(),
+		  legend.position = "none") +
+	labs(title = "Population structure of the U.K.",
+		 subtitle = "<span style = 'color:#d95f02'>Male</span> and <span style = 'color:#1b9e77'>female</span> residents as of 2020",
+		 x = "Age")
+
+p2 <- uk_pop %>%
+	mutate(total = male2020 + female2020) %>%
+	mutate(tag = case_when(age_group < 70 ~ "During", TRUE ~ "Before")) %>%
+	mutate(label = case_when(tag == "During" ~ "Born <i>during</i> Elizabeth's reign",
+							 TRUE ~ "Born <i>before</i> Elizabeth's reign")) %>%
+	group_by(label) %>%
+	summarize(pop = sum(total)) %>%
+	mutate(pct = pop / sum(pop)) %>%
+	ggplot(aes(x = 1, y = pct, fill = label)) +
+	geom_col() +
+	geom_richtext(position = position_stack(vjust = .5), aes(label = label), color = "white", label.color = NA, fontface = "bold") +
+	scale_y_continuous(labels = percent_format(accuracy = 1), expand = expansion(mult = 0), breaks = seq(0, 1, .2)) +
+	scale_x_continuous(expand = expansion(mult = 0)) +
+	scale_fill_brewer(palette = "Accent") +
+	theme_dhm() +
+	theme(panel.border = element_blank(),
+		  plot.background = element_rect(fill = "white", color = NA),
+		  axis.title = element_blank(),
+		  axis.text.x = element_blank(),
+		  panel.grid = element_blank(),
+		  legend.position = "none") +
+	labs(title = "Percent of British\npopulation born in\nElizabeth's reign")
+
+patch <- p1 + 
+	p2 + 
+	plot_layout(ncol = 2, widths = c(3, 1)) + 
+	plot_annotation(caption = "Source: U.K. Office for National Statistics. Graph by David H. Montgomery, dhmontgomery.com") &
+	plot_annotation(theme = theme_dhm() + 
+						theme(plot.background = element_rect(fill = "white", size = 2, color = "black")))
+ggsave(here("images/poppyramid.png"), width = 12, height = 6)
+```
+
+```{r plot_lifespan} 
+royals %>%
+	mutate(order = as.numeric(row.names(royals)),
+		   regal_name = replace(regal_name, regal_name == "William & Mary", "Mary II") %>% as.factor() %>% fct_reorder(order),
+		   reign_start = ifelse(reign_start == as.Date("1694-12-28"), as.Date("1689-02-13"), reign_start) %>% as_date(),
+		 reign_length = (reign_end - reign_start) %>% as.interval(reign_start) %>% as.numeric("days"),
+		 lifespan_days = (deathdate - birthdate) %>% as.interval(birthdate) %>% as.numeric("days")) %>%
+	select(regal_name, order, reign_length, lifespan_days) %>%
+	ggplot(aes(x = fct_reorder(regal_name, reign_length))) +
+	geom_col(aes(y = lifespan_days/365.24, fill = "grey45")) +
+	geom_col(aes(y = reign_length/365.24, fill = "cyan3")) +
+	geom_text(data = . %>% filter(regal_name == "Elizabeth II"), aes(y = lifespan_days / 365.24, label = "Lifespan"), 
+			  size = 3.8, hjust = 1.1, color = "white", family = "Avenir Next Medium Italic") +
+	geom_text(data = . %>% filter(regal_name == "Elizabeth II"), aes(y = reign_length / 365.24, label = "Reign length"), 
+			  size = 3.8, hjust = 1.1, color = "white", family = "Avenir Next Medium Italic") +
+	scale_y_continuous(expand = c(0,0), limits = c(0, 100), breaks = seq(0, 100, 20)) +
+	scale_fill_manual(values = c("cyan3", "grey45"), labels = c("Reign length", "Lifespan")) +
+	coord_flip() +
+	theme_dhm() +
+	theme(axis.title.y = element_blank(),
+		  panel.grid.major.y = element_blank(),
+		  legend.position = "none") +
+	labs(title = "Years of life and reign for British monarchs",
+		 caption = "Graphic by David H. Montgomery, dhmontgomery.com",
+		 subtitle = "Elizabeth II's reign and lifespan are through June 2022",
+		 fill = "",
+		 y = "Years")
+ggsave(here("images/plot_lifespan.png"), width = 10, height = 5)
+```
+
+```{r plot_timeline}
+pms_tall <- pms_processed %>% 
+	rowid_to_column(var = "order") %>%
+	mutate(title = fct_reorder(title, order)) %>%
+	select(order, title, born, death) %>%
+	pivot_longer(born:death, names_to = "borndied", values_to = "date")
+ggplot() +
+	# geom_rect(aes(xmin = as.Date("1760-05-29"), xmax = as.Date("1785-02-06"), ymin = -1, ymax = 1)) +
+	geom_line(data = pms_tall, aes(x = date, y = fct_reorder(title, order)), color = "black") +
+	geom_rect(data = royals, aes(xmin = reign_start, xmax = reign_end, ymin = -Inf, ymax = Inf, fill = fct_relevel(sex, "female", "both", "male")), inherit.aes = FALSE, alpha = 0.8) +
+	geom_line(data = pms_tall, aes(x = date, y = fct_reorder(title, order)), size = 2, color = "black") +
+	geom_line(data = pms_processed %>% 
+			  	mutate(order = as.numeric(row.names(pms_processed)), 
+			  		   title = as.factor(title),
+			  		   end = ifelse(is.na(end), today(), end) %>% as_date()) %>%
+			  	select(order, title, start, end) %>%
+			  	pivot_longer(3:4, names_to = "startofterm", values_to = "date", 3:4), 
+			  aes(x = date, y = fct_reorder(title,order), group = order), size = 2, color = "white") +
+	scale_fill_manual(values = brewer.pal(3, "Set1")[c(1, 3, 2)], name = "Reigning monarch:", labels = c("Queen", "Queen & King", "King")) +
+	# geom_rect(aes(xmin = date, xmax = date, ymin = -Inf, ymax = Inf, color = party)) +
+	scale_x_date(expand = c(0,0)) +
+	theme_dhm() +
+	theme(legend.position = "top",
+		  axis.title.y = element_blank()) +
+	labs(title = "Lifespan of every British prime minister",
+		 subtitle = "By gender of reigning monarch. White lines indicate terms as prime minister",
+		 caption = "Source: Wikipedia, Jack Bailey. Graphic by David H. Montgomery, dhmontgomery.com",
+		 x = "Date of birth and death")
+ggsave(here("images/plot_timeline.png"), width = 10, height = 11)
+```
+
+```{r plot_overlap}
+ggplot(overlaps_by_gender, aes(prime_minister, pct, fill = fct_relevel(monarch_sex, "female", "both", "male"))) +
+	geom_col(color = NA, alpha = 0.8) +
+	coord_flip() +
+	theme_dhm() +
+	scale_fill_manual(values = brewer.pal(3, "Set1")[c(1, 3, 2)], name = "Reigning monarch:", labels = c("Queen", "Queen & King", "King")) +
+	scale_y_continuous(labels = percent, expand = c(0,0)) +
+	theme(plot.title = element_text(hjust = 1.1),
+		  plot.margin = margin(t = 10, r = 20, b = 10, l = 10),
+		  legend.position = "top") +
+	labs(title = "Share of prime ministers' lives under kings & queens",
+		 caption = "Graphic by David H. Montgomery, dhmontgomery.com",
+		 x = "",
+		 y = "Percent of lifespan (to date)")
+ggsave(here("images/plot_overlap.png"), width = 10, height = 11)
+```
